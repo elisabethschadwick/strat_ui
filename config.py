@@ -19,6 +19,7 @@ PG_DBNAME = _require("PG_DBNAME")
 PG_USER = _require("PG_USER")
 PG_PASSWORD = _require("PG_PASSWORD")
 PG_SCHEMA = os.environ.get("PG_SCHEMA", "trendfragility")
+api_url = "http://ec2-18-162-125-60.ap-east-1.compute.amazonaws.com:9000"
 
 def get_engine() -> sqlalchemy.engine.base.Engine:
     connection_string = (

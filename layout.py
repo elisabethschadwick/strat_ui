@@ -37,9 +37,9 @@ layout = html.Div(
                         "color": MUTED,
                         "fontWeight": "700",
                         "letterSpacing": "0.06em",
-                        "marginBottom": "0.35rem"}),
+                        "marginBottom": "0.5rem"}),
                     html.Div("SYNCHRONIZING", id="portfolio-status-indicator", style={"fontSize": "1.2rem", "fontWeight": "700", "color": MUTED})
-                ], xl=3, lg=3, md=6, xs=12),
+                ], width=2),
 
                 dbc.Col([
                         html.Div("Portfolio Actions:", style={
@@ -47,28 +47,36 @@ layout = html.Div(
                         "color": MUTED,
                         "marginBottom": "0.55rem",
                         "fontWeight": "700",
-                        "letterSpacing": "0.06em"
+                        "letterSpacing": "0.06em",
+                        "textAlign": "center"
                     }),
                     html.Div([
-                        dbc.Button("Portfolio On",
+                        dbc.Button("On",
                                    id="all-on-btn",
                                    color="success",
                                    style={
                                        "fontWeight": "700",
-                                       "fontSize": "0.9rem",
+                                       "fontSize": "1.5rem",
                                        "borderRadius": "4px",
                                        "padding": "0.4rem 1.1rem"}),
-                        dbc.Button("Portfolio Off",
+                        dbc.Button("Off",
                                    id="all-off-btn",
                                    color="danger",
                                    className="ms-2",
                                    style={
                                        "fontWeight": "700",
-                                       "fontSize": "0.9rem",
+                                       "fontSize": "1.5rem",
                                        "borderRadius": "4px",
                                        "padding": "0.4rem 1.1rem"}),
-                    ], className="d-flex")
-                ], xl=3, lg=3, md=6, xs=12, style={"borderRight": f"1px solid {BORDER}", "paddingRight": "1.5rem"}),
+                    ], className="d-flex justify-content-center")
+                ], width=2, style={
+                    "borderRight": f"1px solid {BORDER}",
+                    "paddingRight": "1.5rem",
+                    "display": "flex",
+                    "flexDirection": "column",
+                    "justifyContent": "center",
+                    "alignItems": "center"
+                }),
 
                 dbc.Col([
                     html.Div("Net P&L:", style={
@@ -82,7 +90,21 @@ layout = html.Div(
                         "fontWeight": "700",
                         "color": RED,
                         "fontFamily": SANS})
-                ], xl=2, lg=2, md=4, xs=12, className="ps-4"),
+                ], width=2, className="ps-3"),
+
+                dbc.Col([
+                    html.Div("Daily P&L:", style={
+                        "fontSize": "1rem",
+                        "color": MUTED,
+                        "fontWeight": "700",
+                        "color": MUTED,
+                        "marginBottom": "0.25rem"}),
+                    html.Div("$0.00", id="daily-pnl-node", style={
+                        "fontSize": "2rem",
+                        "fontWeight": "700",
+                        "color": RED,
+                        "fontFamily": SANS})
+                ], width=2),
 
                 dbc.Col([
                     html.Div ("Current Long Capital:", style={
@@ -96,10 +118,10 @@ layout = html.Div(
                         "fontWeight": "600",
                         "color": TEAL,
                         "fontFamily": SANS})
-                ], xl=2, lg=2, md=4, xs=12),
+                ], width=2),
 
                 dbc.Col([
-                    html.Div("Current Short Dollars:", style={
+                    html.Div("Current Short Capital:", style={
                         "fontSize": "1rem",
                         "color": MUTED,
                         "fontWeight": "700",
@@ -110,8 +132,8 @@ layout = html.Div(
                         "fontWeight": "600",
                         "color": RED,
                         "fontFamily": SANS})
-                ], xl=2, lg=2, md=4, xs=12)
-            ], align="center", className="g-3")
+                ],width=2)
+            ], align="center", className="g-2")
         ]),
         dbc.Row([
             dbc.Col([
@@ -136,7 +158,7 @@ layout = html.Div(
             ], lg=4, md=12)
         ], className="mb-3"),
 
-        card_wrapper("AVAILABLE SYMBOL UNIVERSE", [
+        card_wrapper("AVAILABLE SYMBOLS", [
             html.Div("Select active symbol profile from 'pl *' registry map:", style={"fontSize": "1rem", "color": MUTED, "marginBottom": "0.5rem"}),
             dbc.Select(
                 id="symbol-dropdown",
@@ -210,8 +232,38 @@ layout = html.Div(
 
         card_wrapper("CURRENT POSITIONS", [
             html.Div([
-                dbc.Input(id="ledger-filter-input", placeholder="Filter by asset identifier or exchange origin...", type="text", style={"backgroundColor": "#0D1526", "color": TEXT, "border": f"1px solid {BORDER}", "maxWidth": "400px", "marginBottom": "1rem"})
-            ]),
+                dbc.RadioItems(
+                    id="exchange-quick-filter",
+                    className="btn-group d-flex w-100",
+                    inputClassName="btn-check",
+                    labelStyle={
+                        "color": "#CBD5E1",
+                        "borderColor": BORDER,
+                        "fontWeight": "600",
+                    },
+                    labelClassName="btn btn-outline-primary py-2",
+                    labelCheckedClassName="active",
+                    options=[
+                        {"label": "All", "value": "ALL"},
+                        {"label": "Binance", "value": "BINANCE"},
+                        {"label": "OKX", "value": "OKEX"},
+                    ],
+                    value="ALL",
+                    style={"marginBottom": "1rem", "width": "100%"}
+                ),
+                dbc.Input(
+                    id="ledger-filter-input",
+                    placeholder="Filter by asset identifier or exchange origin...",
+                    type="text",
+                    style={
+                        "backgroundColor": "#0D1526",
+                        "color": TEXT,
+                        "border": f"1px solid {BORDER}",
+                        "width": "100%",
+                        "padding": "0.6rem"
+                    }
+                )
+            ], style={"display": "flex", "alignItems": "center", "flexWrap": "wrap"}),
             html.Div(id="ledger-table-container")
         ]),
 
@@ -239,11 +291,11 @@ layout = html.Div(
         card_wrapper("STRATEGY PERFORMANCE (P&L)", [
             dbc.Row([
                 dbc.Col([
-                    html.Div("EQUITY CURVE REVENUE ($)", style={"fontSize": "1rem", "color": MUTED, "marginBottom": "0.5rem"}),
+                    html.Div("STRATEGY RETURN ($)", style={"fontSize": "1rem", "color": MUTED, "marginBottom": "0.5rem"}),
                     dcc.Graph(id="dollar-pnl-graph", config={"displayModeBar": False})
                 ], lg=6, md=12),
                 dbc.Col([
-                    html.Div("STRATEGY RETURN (%)", style={"fontSize": "1rem", "color": MUTED, "marginBottom": "0.5rem"}),
+                    html.Div("SHORT / LONG POSITIONS (%)", style={"fontSize": "1rem", "color": MUTED, "marginBottom": "0.5rem"}),
                     dcc.Graph(id="percent-pnl-graph", config={"displayModeBar": False})
                 ], lg=6, md=12)
             ])
